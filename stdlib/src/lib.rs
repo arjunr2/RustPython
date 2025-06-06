@@ -23,7 +23,7 @@ mod sha3;
 mod sha512;
 
 mod json;
-#[cfg(not(any(target_os = "ios", target_os = "android", target_arch = "wasm32")))]
+#[cfg(not(any(target_os = "ios", target_os = "android", all(target_arch = "wasm32", not(target_os = "linux")))))]
 mod locale;
 mod math;
 #[cfg(unix)]
@@ -36,18 +36,18 @@ mod statistics;
 // mod re;
 #[cfg(feature = "bz2")]
 mod bz2;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
 pub mod socket;
 #[cfg(all(unix, not(target_os = "redox")))]
 mod syslog;
 mod unicodedata;
 mod zlib;
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
 mod faulthandler;
 #[cfg(any(unix, target_os = "wasi"))]
 mod fcntl;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
 mod multiprocessing;
 #[cfg(unix)]
 mod posixsubprocess;
@@ -62,9 +62,9 @@ mod resource;
 mod scproxy;
 #[cfg(any(unix, windows, target_os = "wasi"))]
 mod select;
-#[cfg(not(any(target_os = "android", target_arch = "wasm32")))]
+#[cfg(not(any(target_os = "android", all(target_arch = "wasm32", not(target_os = "linux")))))]
 mod sqlite;
-#[cfg(all(not(target_arch = "wasm32"), feature = "ssl"))]
+#[cfg(all(any(not(target_arch = "wasm32"), target_os = "linux"), feature = "ssl"))]
 mod ssl;
 #[cfg(all(unix, not(target_os = "redox"), not(target_os = "ios")))]
 mod termios;
@@ -72,7 +72,7 @@ mod termios;
     target_os = "android",
     target_os = "ios",
     target_os = "windows",
-    target_arch = "wasm32",
+    all(target_arch = "wasm32", not(target_os = "linux")),
     target_os = "redox",
 )))]
 mod uuid;
@@ -136,13 +136,13 @@ pub fn get_module_inits() -> impl Iterator<Item = (Cow<'static, str>, StdlibInit
         {
             "select" => select::make_module,
         }
-        #[cfg(not(target_arch = "wasm32"))]
+        #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
         {
             "_multiprocessing" => multiprocessing::make_module,
             "_socket" => socket::make_module,
             "faulthandler" => faulthandler::make_module,
         }
-        #[cfg(not(any(target_os = "android", target_arch = "wasm32")))]
+        #[cfg(not(any(target_os = "android", all(target_arch = "wasm32", not(target_os = "linux")))))]
         {
             "_sqlite3" => sqlite::make_module,
         }
@@ -181,11 +181,11 @@ pub fn get_module_inits() -> impl Iterator<Item = (Cow<'static, str>, StdlibInit
         {
             "_scproxy" => scproxy::make_module,
         }
-        #[cfg(not(any(target_os = "android", target_os = "ios", target_os = "windows", target_arch = "wasm32", target_os = "redox")))]
+        #[cfg(not(any(target_os = "android", target_os = "ios", target_os = "windows", all(target_arch = "wasm32", not(target_os = "linux")), target_os = "redox")))]
         {
             "_uuid" => uuid::make_module,
         }
-        #[cfg(not(any(target_os = "ios", target_os = "android", target_arch = "wasm32")))]
+        #[cfg(not(any(target_os = "ios", target_os = "android", all(target_arch = "wasm32", not(target_os = "linux")))))]
         {
             "_locale" => locale::make_module,
         }

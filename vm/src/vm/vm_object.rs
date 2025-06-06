@@ -13,13 +13,13 @@ impl VirtualMachine {
     #[track_caller]
     #[cold]
     fn _py_panic_failed(&self, exc: PyBaseExceptionRef, msg: &str) -> ! {
-        #[cfg(not(all(target_arch = "wasm32", not(target_os = "wasi"))))]
+        #[cfg(not(all(target_arch = "wasm32", not(any(target_os = "wasi", target_os = "linux")))))]
         {
             self.print_exception(exc);
             self.flush_std();
             panic!("{msg}")
         }
-        #[cfg(all(target_arch = "wasm32", not(target_os = "wasi")))]
+        #[cfg(all(target_arch = "wasm32", not(any(target_os = "wasi", target_os = "linux"))))]
         {
             use wasm_bindgen::prelude::*;
             #[wasm_bindgen]

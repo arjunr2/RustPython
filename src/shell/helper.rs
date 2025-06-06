@@ -1,4 +1,4 @@
-#![cfg_attr(target_arch = "wasm32", allow(dead_code))]
+#![cfg_attr(all(target_arch = "wasm32", not(target_os = "linux")), allow(dead_code))]
 use rustpython_vm::{
     builtins::{PyDictRef, PyStrRef},
     function::ArgIterable,

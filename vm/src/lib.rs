@@ -60,7 +60,7 @@ pub mod import;
 mod intern;
 pub mod iter;
 pub mod object;
-#[cfg(any(not(target_arch = "wasm32"), target_os = "wasi"))]
+#[cfg(any(not(target_arch = "wasm32"), any(target_os = "wasi", target_os = "linux")))]
 pub mod ospath;
 pub mod prelude;
 pub mod protocol;

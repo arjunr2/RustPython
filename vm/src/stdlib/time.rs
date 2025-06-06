@@ -8,7 +8,7 @@ pub use decl::time;
 
 pub(crate) fn make_module(vm: &VirtualMachine) -> PyRef<PyModule> {
     #[cfg(not(target_env = "msvc"))]
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
     unsafe {
         c_tzset()
     };
@@ -16,7 +16,7 @@ pub(crate) fn make_module(vm: &VirtualMachine) -> PyRef<PyModule> {
 }
 
 #[cfg(not(target_env = "msvc"))]
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
 extern "C" {
     #[link_name = "daylight"]
     static c_daylight: std::ffi::c_int;
@@ -97,12 +97,12 @@ mod decl {
         _time(vm)
     }
 
-    #[cfg(any(not(target_arch = "wasm32"), target_os = "wasi"))]
+    #[cfg(any(not(target_arch = "wasm32"), any(target_os = "wasi", target_os = "linux")))]
     fn _time(vm: &VirtualMachine) -> PyResult<f64> {
         Ok(duration_since_system_now(vm)?.as_secs_f64())
     }
 
-    #[cfg(all(target_arch = "wasm32", not(target_os = "wasi")))]
+    #[cfg(all(target_arch = "wasm32", not(any(target_os = "wasi", target_os = "linux"))))]
     fn _time(_vm: &VirtualMachine) -> PyResult<f64> {
         use wasm_bindgen::prelude::*;
         #[wasm_bindgen]
@@ -141,21 +141,21 @@ mod decl {
     // }
 
     #[cfg(not(target_env = "msvc"))]
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
     #[pyattr]
     fn timezone(_vm: &VirtualMachine) -> std::ffi::c_long {
         unsafe { super::c_timezone }
     }
 
     #[cfg(not(target_env = "msvc"))]
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
     #[pyattr]
     fn daylight(_vm: &VirtualMachine) -> std::ffi::c_int {
         unsafe { super::c_daylight }
     }
 
     #[cfg(not(target_env = "msvc"))]
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
     #[pyattr]
     fn tzname(vm: &VirtualMachine) -> crate::builtins::PyTupleRef {
         use crate::builtins::tuple::IntoPyTuple;
@@ -327,7 +327,7 @@ mod decl {
     }
 
     // same as the get_process_time impl for most unixes
-    #[cfg(all(target_arch = "wasm32", target_os = "wasi"))]
+    #[cfg(all(target_arch = "wasm32", any(target_os = "wasi", target_os = "linux")))]
     pub(super) fn get_process_time(vm: &VirtualMachine) -> PyResult<Duration> {
         let time: libc::timespec = unsafe {
             let mut time = std::mem::MaybeUninit::uninit();

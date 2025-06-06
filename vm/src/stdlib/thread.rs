@@ -344,7 +344,7 @@ pub(crate) mod _thread {
         vm.state.thread_count.fetch_sub(1);
     }
 
-    #[cfg(not(target_arch = "wasm32"))]
+    #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
     #[pyfunction]
     fn interrupt_main(signum: OptionalArg<i32>, vm: &VirtualMachine) -> PyResult<()> {
         crate::signal::set_interrupt_ex(signum.unwrap_or(libc::SIGINT), vm)

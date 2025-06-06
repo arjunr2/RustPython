@@ -1162,7 +1162,7 @@ pub(crate) fn errno_to_exc_type(errno: i32, vm: &VirtualMachine) -> Option<&'sta
     }
 }
 
-#[cfg(all(target_arch = "wasm32", not(target_os = "wasi")))]
+#[cfg(all(target_arch = "wasm32", not(any(target_os = "wasi", target_os = "linux"))))]
 pub(crate) fn errno_to_exc_type(_errno: i32, _vm: &VirtualMachine) -> Option<&'static Py<PyType>> {
     None
 }
@@ -1369,7 +1369,7 @@ pub(super) mod types {
     // OS Errors:
     #[pyexception]
     impl PyOSError {
-        #[cfg(not(target_arch = "wasm32"))]
+        #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
         fn optional_new(args: Vec<PyObjectRef>, vm: &VirtualMachine) -> Option<PyBaseExceptionRef> {
             let len = args.len();
             if (2..=5).contains(&len) {
@@ -1383,7 +1383,7 @@ pub(super) mod types {
                 None
             }
         }
-        #[cfg(not(target_arch = "wasm32"))]
+        #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
         #[pyslot]
         fn slot_new(cls: PyTypeRef, args: FuncArgs, vm: &VirtualMachine) -> PyResult {
             // We need this method, because of how `CPython` copies `init`
@@ -1398,7 +1398,7 @@ pub(super) mod types {
                 PyBaseException::slot_new(cls, args, vm)
             }
         }
-        #[cfg(target_arch = "wasm32")]
+        #[cfg(all(target_arch = "wasm32", not(target_os = "linux")))]
         #[pyslot]
         fn slot_new(cls: PyTypeRef, args: FuncArgs, vm: &VirtualMachine) -> PyResult {
             PyBaseException::slot_new(cls, args, vm)

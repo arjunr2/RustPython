@@ -284,7 +284,7 @@ impl VirtualMachine {
 
         let mut essential_init = || -> PyResult {
             import::import_builtin(self, "_typing")?;
-            #[cfg(not(target_arch = "wasm32"))]
+            #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
             import::import_builtin(self, "_signal")?;
             #[cfg(any(feature = "parser", feature = "compiler"))]
             import::import_builtin(self, "_ast")?;
@@ -293,7 +293,7 @@ impl VirtualMachine {
             let importlib = import::init_importlib_base(self)?;
             self.import_utf8_encodings()?;
 
-            #[cfg(any(not(target_arch = "wasm32"), target_os = "wasi"))]
+            #[cfg(any(not(target_arch = "wasm32"), any(target_os = "wasi", target_os = "linux")))]
             {
                 // this isn't fully compatible with CPython; it imports "io" and sets
                 // builtins.open to io.OpenWrapper, but this is easier, since it doesn't
@@ -729,11 +729,11 @@ impl VirtualMachine {
     /// Checks for triggered signals and calls the appropriate handlers. A no-op on
     /// platforms where signals are not supported.
     pub fn check_signals(&self) -> PyResult<()> {
-        #[cfg(not(target_arch = "wasm32"))]
+        #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
         {
             crate::signal::check_signals(self)
         }
-        #[cfg(target_arch = "wasm32")]
+        #[cfg(all(target_arch = "wasm32", not(target_os = "linux")))]
         {
             Ok(())
         }
