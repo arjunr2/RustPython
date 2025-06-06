@@ -155,6 +155,9 @@ lto = "thin"
 [patch.crates-io]
 # REDOX START, Uncomment when you want to compile/check with redoxer
 # REDOX END
+libc = { git = "https://github.com/arjunr2/rust-libc.git", branch = "libc-0.2" }
+nix = { git = "https://github.com/arjunr2/nix.git", branch = "r0.23" }
+chrono = { git = "https://github.com/chronotope/chrono.git" }
 
 # Used only on Windows to build the vcpkg dependencies
 [package.metadata.vcpkg]

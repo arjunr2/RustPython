@@ -235,16 +235,15 @@ checksum = "fd16c4719339c4530435d38e511904438d07cce7950afa3718a84ac36c10e89e"
 
 [[package]]
 name = "chrono"
-version = "0.4.37"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8a0d04d43504c61aa6c7531f1871dd0d418d91130162063b789da00fd7057a5e"
+version = "0.4.41"
+source = "git+https://github.com/chronotope/chrono.git#bab97905ccfa5aa7ceae1ee131b41b7113ea4f6a"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
  "js-sys",
  "num-traits",
  "wasm-bindgen",
- "windows-targets 0.52.0",
+ "windows-link",
 ]
 
 [[package]]
@@ -1123,9 +1122,8 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.153"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c198f91728a82281a64e1f4f9eeb25d82cb32a5de251c6bd1b5154d63a8e7bd"
+version = "0.2.155"
+source = "git+https://github.com/arjunr2/rust-libc.git?branch=libc-0.2#09739babc6639cb04522f35c8e0f11f8d217cd82"
 
 [[package]]
 name = "libffi"
@@ -1385,8 +1383,7 @@ dependencies = [
 [[package]]
 name = "nix"
 version = "0.23.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f3790c00a0150112de0f4cd161e3d7fc4b2d8a5542ffc35f099a2562aecb35c"
+source = "git+https://github.com/arjunr2/nix.git?branch=r0.23#092e2bf98e7abf4c880fd21fee8f2d1f367374c9"
 dependencies = [
  "bitflags 1.3.2",
  "cc",
@@ -3241,6 +3238,12 @@ checksum = "33ab640c8d7e35bf8ba19b884ba838ceb4fba93a4e8c65a9059d08afcfc683d9"
 dependencies = [
  "windows-targets 0.52.0",
 ]
+
+[[package]]
+name = "windows-link"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "76840935b766e1b0a05c0066835fb9ec80071d4c09a16f6bd5f7e655e3c14c38"
 
 [[package]]
 name = "windows-sys"
