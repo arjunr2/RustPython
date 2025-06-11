@@ -94,9 +94,8 @@ uname = "0.1.1"
 strum = "0.24.0"
 strum_macros = "0.24.0"
 
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-rustyline = { workspace = true }
 [target.'cfg(any(not(target_arch = "wasm32"), target_os = "linux"))'.dependencies]
+rustyline = { workspace = true }
 which = "4.2.5"
 
 [target.'cfg(any(not(target_arch = "wasm32"), any(target_os = "wasi",target_os = "linux")))'.dependencies]

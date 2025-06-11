@@ -1,4 +1,4 @@
-#![cfg_attr(all(target_arch = "wasm32", not(target_os = "linux")), allow(dead_code))]
+#![cfg_attr(target_arch = "wasm32", allow(dead_code))]
 use rustpython_vm::{
     builtins::{PyDictRef, PyStrRef},
     function::ArgIterable,
@@ -146,7 +146,7 @@ impl<'vm> ShellHelper<'vm> {
 }
 
 cfg_if::cfg_if! {
-    if #[cfg(not(target_arch = "wasm32"))] {
+    if #[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))] {
         use rustyline::{
             completion::Completer, highlight::Highlighter, hint::Hinter, validate::Validator, Context,
             Helper,

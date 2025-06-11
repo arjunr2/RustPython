@@ -117,7 +117,7 @@ flamescope = { version = "0.1.2", optional = true }
 [target.'cfg(windows)'.dependencies]
 libc = { workspace = true }
 
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+[target.'cfg(any(not(target_arch = "wasm32"), target_os = "linux"))'.dependencies]
 rustyline = { workspace = true }
 
 [dev-dependencies]
@@ -157,6 +157,8 @@ lto = "thin"
 # REDOX END
 libc = { git = "https://github.com/arjunr2/rust-libc.git", branch = "libc-0.2" }
 chrono = { git = "https://github.com/chronotope/chrono.git" }
+linux-raw-sys = { path = "../linux-raw-sys" }
+
 
 # Used only on Windows to build the vcpkg dependencies
 [package.metadata.vcpkg]

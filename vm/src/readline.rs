@@ -57,7 +57,7 @@ mod basic_readline {
     }
 }
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
 mod rustyline_readline {
     use super::*;
 
@@ -120,9 +120,9 @@ mod rustyline_readline {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(all(target_arch = "wasm32", not(target_os = "linux")))]
 use basic_readline as readline_inner;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(any(not(target_arch = "wasm32"), target_os = "linux"))]
 use rustyline_readline as readline_inner;
 
 pub use readline_inner::Helper;
