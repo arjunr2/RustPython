@@ -9,7 +9,11 @@ This has been added to `Cargo.toml` as described below (remove after upstream).
 # REDOX END
 libc = { git = "https://github.com/arjunr2/rust-libc.git", branch = "libc-0.2" }
 chrono = { git = "https://github.com/chronotope/chrono.git" }
-nix = { git = "https://github.com/nix-rust/nix.git" }
+```
+
+You also need to run after this:
+```shell
+cargo update -p libc chrono
 ```
 
 ### Notes
